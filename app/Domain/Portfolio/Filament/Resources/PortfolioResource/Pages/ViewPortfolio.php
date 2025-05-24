@@ -1,21 +1,23 @@
 <?php
 
-namespace App\Domain\User\Filament\Admin\Resources\UserResource\Pages;
+namespace App\Domain\Portfolio\Filament\Resources\PortfolioResource\Pages;
 
-use App\Domain\User\Filament\Admin\Resources\UserResource;
-use App\Domain\User\Models\User;
+use App\Domain\Portfolio\Filament\Resources\PortfolioResource;
+use App\Domain\Portfolio\Models\Portfolio;
 use Filament\Actions;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
 
-class ViewUser extends ViewRecord
+class ViewPortfolio extends ViewRecord
 {
     /**
-     * @var string $resource The resource that this page is associated with.
+     * The resource that this page is associated with.
+     *
+     * @var string
      */
-    protected static string $resource = UserResource::class;
+    protected static string $resource = PortfolioResource::class;
 
     /**
      * Returns an Infolist instance for displaying user information.
@@ -28,20 +30,13 @@ class ViewUser extends ViewRecord
     {
         return $infolist
             ->schema([
-                Section::make(__('User Information'))
+                Section::make(__('Portfolio Information'))
                     ->schema([
                         TextEntry::make('name')
                             ->label(__('Name')),
-                        TextEntry::make('email')
-                            ->label(__('Email')),
-                        TextEntry::make('roles')
-                            ->label(__('Roles'))
-                            ->placeholder(__('No roles assigned'))
-                            ->state(fn (User $record) => $record->roles->pluck('name')->join(', ')),
-                        TextEntry::make('email_verified_at')
-                            ->label(__('Email Verified At'))
-                            ->placeholder(__('Not Verified'))
-                            ->dateTime(),
+                        TextEntry::make('description')
+                            ->label(__('Description'))
+                            ->columnSpan(['md' => 2]),
                     ])
                     ->columns(['md' => 2])
                     ->columnSpan(['md' => 2]),
@@ -57,13 +52,13 @@ class ViewUser extends ViewRecord
                             ->label(__('Deleted At'))
                             ->dateTime()
                             ->color('danger')
-                            ->visible(fn (User $record) => $record->trashed()),
+                            ->visible(fn (Portfolio $record) => $record->trashed()),
                     ])->columnSpan(['lg' => 1]),
             ])->columns(3);
     }
 
     /**
-     * Get the header actions for the view user page.
+     * Get the header actions for the page.
      *
      * @return array<Actions\Action>
      */

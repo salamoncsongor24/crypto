@@ -12,8 +12,8 @@ class ShieldSeeder extends Seeder
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $rolesWithPermissions = '[{"name":"super_admin","guard_name":"admin","permissions":["view_role","view_any_role","create_role","update_role","delete_role","delete_any_role","view_user","view_any_user","create_user","update_user","restore_user","restore_any_user","replicate_user","reorder_user","delete_user","delete_any_user","force_delete_user","force_delete_any_user"]},{"name":"Crypto Holder","guard_name":"web","permissions":[]}]';
-        $directPermissions = '[]';
+        $rolesWithPermissions = '[{"name":"super_admin","guard_name":"admin","permissions":["view_role","view_any_role","create_role","update_role","delete_role","delete_any_role","view_user","view_any_user","create_user","update_user","restore_user","restore_any_user","replicate_user","reorder_user","delete_user","delete_any_user","force_delete_user","force_delete_any_user"]},{"name":"Crypto Holder","guard_name":"web","permissions":["view_portfolio","view_any_portfolio","create_portfolio","update_portfolio","replicate_portfolio","reorder_portfolio","delete_portfolio","delete_any_portfolio"]}]';
+        $directPermissions = '{"22":{"name":"restore_portfolio","guard_name":"web"},"23":{"name":"restore_any_portfolio","guard_name":"web"},"28":{"name":"force_delete_portfolio","guard_name":"web"},"29":{"name":"force_delete_any_portfolio","guard_name":"web"}}';
 
         static::makeRolesWithPermissions($rolesWithPermissions);
         static::makeDirectPermissions($directPermissions);
