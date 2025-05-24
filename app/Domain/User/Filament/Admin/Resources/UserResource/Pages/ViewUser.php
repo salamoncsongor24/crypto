@@ -27,6 +27,10 @@ class ViewUser extends ViewRecord
                             ->label(__('Name')),
                         TextEntry::make('email')
                             ->label(__('Email')),
+                        TextEntry::make('roles')
+                            ->label(__('Roles'))
+                            ->placeholder(__('No roles assigned'))
+                            ->state(fn (User $record) => $record->roles->pluck('name')->join(', ')),
                         TextEntry::make('email_verified_at')
                             ->label(__('Email Verified At'))
                             ->placeholder(__('Not Verified'))
