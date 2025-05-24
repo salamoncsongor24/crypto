@@ -3,6 +3,7 @@
 namespace App\Domain\User\Filament\Admin\Resources\UserResource\Pages;
 
 use App\Domain\User\Filament\Admin\Resources\UserResource;
+use App\Domain\User\Models\User;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
@@ -41,6 +42,10 @@ class ListUsers extends ListRecords
                     ->label(__('Email'))
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('roles')
+                    ->label(__('Roles'))
+                    ->placeholder(__('No roles assigned'))
+                    ->state(fn (User $record) => $record->roles->pluck('name')->join(', ')),
                 IconColumn::make('email_verified_at')
                     ->label(__('Email Verified'))
                     ->boolean()
