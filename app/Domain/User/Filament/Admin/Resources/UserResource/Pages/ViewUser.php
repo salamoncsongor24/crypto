@@ -17,6 +17,13 @@ class ViewUser extends ViewRecord
      */
     protected static string $resource = UserResource::class;
 
+    /**
+     * Returns an Infolist instance for displaying user information.
+     *
+     * @param \Filament\Infolists\Infolist $infolist
+     *
+     * @return Infolist
+     */
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist

@@ -7,7 +7,7 @@ use App\Domain\Portfolio\Models\Portfolio;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class PortfolioResource extends Resource implements HasShieldPermissions
 {
@@ -19,7 +19,7 @@ class PortfolioResource extends Resource implements HasShieldPermissions
     /**
      * @var string $navigationIcon The navigation icon for the resource.
      */
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
 
     /**
      * The pages that should be registered for the resource.
@@ -44,9 +44,7 @@ class PortfolioResource extends Resource implements HasShieldPermissions
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
+            ->where('user_id', Auth::user()->id);
     }
 
     /**
