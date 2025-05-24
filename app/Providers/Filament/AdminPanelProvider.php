@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Domain\User\Filament\Admin\Resources\UserResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -17,29 +18,28 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class CryptoPanelProvider extends PanelProvider
+class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
-            ->id('crypto')
-            ->path('crypto')
+            ->id('admin')
+            ->path('admin')
             ->login()
-            ->registration()
-            ->passwordReset()
+            ->authGuard('admin')
             ->emailVerification()
+            ->passwordReset()
             ->profile()
             ->databaseNotifications()
             ->colors([
-                'primary' => Color::Purple,
+                'primary' => Color::Green,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->resources([
+                UserResource::class,
+            ])
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 //
             ])

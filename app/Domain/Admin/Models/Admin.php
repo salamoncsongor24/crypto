@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Domain\User\Models;
+namespace App\Domain\Admin\Models;
 
-use Database\Factories\UserFactory;
+use Database\Factories\AdminFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements MustVerifyEmail
+class Admin extends User implements MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\AdminFactory> */
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +22,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'email_verified_at',
     ];
 
     /**
@@ -52,10 +50,10 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Create a new factory instance for the model.
      *
-     * @return \Database\Factories\UserFactory
+     * @return \Database\Factories\AdminFactory
      */
-    protected static function newFactory(): UserFactory
+    protected static function newFactory(): AdminFactory
     {
-        return UserFactory::new();
+        return AdminFactory::new();
     }
 }
