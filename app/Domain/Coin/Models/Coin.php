@@ -3,11 +3,14 @@
 namespace App\Domain\Coin\Models;
 
 use App\Domain\Coin\DataObjects\Enums\CoinStatus;
+use App\Domain\Coin\Scopes\ActiveScope;
 use Database\Factories\CoinFactory;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ScopedBy([ActiveScope::class])]
 class Coin extends Model
 {
     /** @use HasFactory<\Database\Factories\CoinFactory> */

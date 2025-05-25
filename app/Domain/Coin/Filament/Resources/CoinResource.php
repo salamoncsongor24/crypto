@@ -4,11 +4,13 @@ namespace App\Domain\Coin\Filament\Resources;
 
 use App\Domain\Coin\Filament\Resources\CoinResource\Pages;
 use App\Domain\Coin\Models\Coin;
+use App\Domain\Coin\Scopes\ActiveScope;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CoinResource extends Resource
+class CoinResource extends Resource implements HasShieldPermissions
 {
     /**
      * @var string $model The model the resource corresponds to.
@@ -43,6 +45,7 @@ class CoinResource extends Resource
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
+                ActiveScope::class,
             ]);
     }
 
@@ -64,5 +67,20 @@ class CoinResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
+    }
+
+    /**
+     * Get the permissions for the resource.
+     *
+     * @return array
+     */
+    public static function getPermissionPrefixes(): array
+    {
+        $permissions_to_add = ['activate', 'deactivate'];
+
+        return array_merge(
+            config('filament-shield.permission_prefixes.resource'),
+            $permissions_to_add
+        );
     }
 }

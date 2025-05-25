@@ -2,6 +2,7 @@
 
 namespace App\Domain\Coin\Filament\Resources\CoinResource\Pages;
 
+use App\Domain\Coin\DataObjects\Enums\CoinStatus;
 use App\Domain\Coin\Filament\Resources\CoinResource;
 use Filament\Tables\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -9,6 +10,7 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class ListCoins extends ListRecords
 {
@@ -62,6 +64,22 @@ class ListCoins extends ListRecords
                     Actions\DeleteAction::make(),
                     Actions\RestoreAction::make(),
                     Actions\ForceDeleteAction::make(),
+                    Actions\Action::make('activate')
+                        ->label(__('Activate'))
+                        ->authorize(fn () => Auth::user()->can('activate', CoinResource::getModel()))
+                        ->action(fn ($record) => $record->update(['status' => CoinStatus::active()]))
+                        ->requiresConfirmation()
+                        ->visible(fn ($record) => $record->status !== CoinStatus::active())
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success'),
+                    Actions\Action::make('deactivate')
+                        ->label(__('Deactivate'))
+                        ->authorize(fn () => Auth::user()->can('deactivate', CoinResource::getModel()))
+                        ->action(fn ($record) => $record->update(['status' => CoinStatus::inactive()]))
+                        ->requiresConfirmation()
+                        ->visible(fn ($record) => $record->status !== CoinStatus::inactive())
+                        ->icon('heroicon-o-x-circle')
+                        ->color('danger'),
                 ]),
             ])
             ->bulkActions([
