@@ -25,6 +25,7 @@ class CoinFactory extends Factory
     public function definition(): array
     {
         return [
+            'remote_id' => fake()->unique()->text(10),
             'name' => fake()->word(),
             'symbol' => strtoupper(fake()->lexify('???')),
             'description' => fake()->text(200),

@@ -4,7 +4,7 @@ namespace App\Domain\Coin\DataObjects\Enums;
 
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
-use Spatie\Enum\Enum;
+use Spatie\Enum\Laravel\Enum;
 
 /**
  * @method static self active()
@@ -32,7 +32,11 @@ class CoinStatus extends Enum implements HasLabel, HasColor
      */
     public function getLabel(): ?string
     {
-        return static::labels()[$this->value] ?? null;
+        return match ($this->value) {
+            'active' => __('Active'),
+            'inactive' => __('Inactive'),
+            default => null,
+        };
     }
 
     /**

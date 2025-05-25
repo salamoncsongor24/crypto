@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('coins', function (Blueprint $table) {
             $table->id();
+            $table->string('remote_id')->unique();
             $table->string('name');
-            $table->string('symbol')->unique();
+            $table->string('symbol');
             $table->text('description')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->softDeletes();

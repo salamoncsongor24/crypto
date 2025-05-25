@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Domain\Coin\Filament\Resources\CoinResource;
 use App\Domain\User\Filament\Admin\Resources\UserResource;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -37,6 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->resources([
                 UserResource::class,
+                CoinResource::class,
             ])
             ->pages([
                 Pages\Dashboard::class,

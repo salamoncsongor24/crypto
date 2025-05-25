@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Domain\User\Filament\Admin\Resources;
+namespace App\Domain\Coin\Filament\Resources;
 
-use App\Domain\User\Filament\Admin\Resources\UserResource\Pages;
-use App\Domain\User\Models\User;
+use App\Domain\Coin\Filament\Resources\CoinResource\Pages;
+use App\Domain\Coin\Models\Coin;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class UserResource extends Resource
+class CoinResource extends Resource
 {
     /**
      * @var string $model The model the resource corresponds to.
      */
-    protected static ?string $model = User::class;
+    protected static ?string $model = Coin::class;
 
     /**
      * @var string $navigationIcon The navigation icon for the resource.
      */
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
 
     /**
      * The pages that should be registered for the resource.
@@ -28,10 +28,8 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'view' => Pages\ViewUser::route('/{record}'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => Pages\ListCoins::route('/'),
+            'view' => Pages\ViewCoin::route('/{record}'),
         ];
     }
 
@@ -55,7 +53,7 @@ class UserResource extends Resource
      */
     public static function getNavigationGroup(): string
     {
-        return __('User Management');
+        return __('Content');
     }
 
     /**

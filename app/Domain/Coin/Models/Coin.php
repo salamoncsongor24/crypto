@@ -19,6 +19,7 @@ class Coin extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'remote_id',
         'name',
         'symbol',
         'description',
