@@ -3,6 +3,7 @@
 namespace App\Domain\Portfolio\Filament\Resources;
 
 use App\Domain\Portfolio\Filament\Resources\PortfolioResource\Pages;
+use App\Domain\Portfolio\Filament\Resources\PortfolioResource\RelationManagers\CoinsRelationManager;
 use App\Domain\Portfolio\Models\Portfolio;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Resources\Resource;
@@ -33,6 +34,18 @@ class PortfolioResource extends Resource implements HasShieldPermissions
             'create' => Pages\CreatePortfolio::route('/create'),
             'view' => Pages\ViewPortfolio::route('/{record}'),
             'edit' => Pages\EditPortfolio::route('/{record}/edit'),
+        ];
+    }
+
+    /**
+     * The relation managers that should be registered for the resource.
+     *
+     * @return array<class-string>
+     */
+    public static function getRelations(): array
+    {
+        return [
+            CoinsRelationManager::class,
         ];
     }
 
