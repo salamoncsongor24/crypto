@@ -4,10 +4,12 @@ namespace App\Domain\Coin\Models;
 
 use App\Domain\Coin\DataObjects\Enums\CoinStatus;
 use App\Domain\Coin\Scopes\ActiveScope;
+use App\Domain\Portfolio\Models\Portfolio;
 use Database\Factories\CoinFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[ScopedBy([ActiveScope::class])]
@@ -39,6 +41,17 @@ class Coin extends Model
         return [
             'status' => CoinStatus::class,
         ];
+    }
+
+    /**
+     * The portfolios that belong to the coin.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Domain\Portfolio\Models\Portfolio>
+     */
+    public function portfolios(): BelongsToMany
+    {
+        return $this->belongsToMany(Portfolio::class, 'portfolio_coin', 'coin_id', 'portfolio_id')
+            ->withPivot('amount');
     }
 
     /**

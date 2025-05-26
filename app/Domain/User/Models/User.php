@@ -2,9 +2,11 @@
 
 namespace App\Domain\User\Models;
 
+use App\Domain\Portfolio\Models\Portfolio;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -48,6 +50,16 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * The portfolios that belong to the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Domain\Portfolio\Models\Portfolio>
+     */
+    public function portfolios(): HasMany
+    {
+        return $this->hasMany(Portfolio::class);
     }
 
     /**
