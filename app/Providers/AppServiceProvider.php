@@ -11,7 +11,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            \App\Domain\Coin\Contracts\CoinApiContract::class,
+            \App\Domain\Coin\Services\CoingeckoApiService::class
+        );
     }
 
     /**

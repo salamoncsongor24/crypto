@@ -2,8 +2,18 @@
 
 namespace App\Domain\Coin\Filament\Resources\CoinResource\Pages;
 
+use App\Domain\Coin\Contracts\CoinApiContract;
 use App\Domain\Coin\DataObjects\Enums\CoinStatus;
 use App\Domain\Coin\Filament\Resources\CoinResource;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Tables\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\ActionGroup;
@@ -97,7 +107,51 @@ class ListCoins extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            // Import action can be added here if needed
+            Action::make('import')
+                ->label(__('Import'))
+                ->icon('heroicon-o-cloud-arrow-down')
+                ->color('primary')
+                ->requiresConfirmation()
+                ->form([
+                    Select::make('select_coin')
+                        ->label(__('Select Coin'))
+                        ->searchable()
+                        ->live()
+                        ->reactive()
+                        ->getSearchResultsUsing(function (string $search, CoinApiContract $coinApiService) {
+                            return strlen($search) > 2
+                                ? $coinApiService->searchCoins($search)->map(function ($coin) {
+                                    return [
+                                        'value' => $coin->remote_id,
+                                        'label' => "{$coin->name} ({$coin->symbol})",
+                                    ];
+                                })->pluck('label', 'value')
+                                : collect([]);
+                        })
+                        ->afterStateUpdated(function ($state, Set $set, CoinApiContract $coinApiService) {
+                                $set('description', $coinApiService->fetchCoinDescription($state));
+                        })
+                        ->required(),
+
+                    Textarea::make('description')
+                        ->label(__('Description'))
+                        ->visible(fn (Get $get) => $get('select_coin') !== null)
+                        ->maxLength(5000)
+                        ->placeholder(__('No description from the API. Feel free to add your own description here.')),
+
+                    Toggle::make('is_active')
+                        ->label(__('Active'))
+                        ->default(true)
+                        ->visible(fn (Get $get) => $get('select_coin') !== null),
+
+                    Checkbox::make('notify_users')
+                        ->label(__('Notify Users?'))
+                        ->default(false)
+                        ->visible(fn (Get $get) => $get('select_coin') !== null),
+                ])
+                ->action(function (array $data) {
+                    dd($data);
+                }),
         ];
     }
 }
