@@ -76,7 +76,7 @@ class CoinResource extends Resource implements HasShieldPermissions
      */
     public static function getPermissionPrefixes(): array
     {
-        $permissions_to_add = ['activate', 'deactivate'];
+        $permissions_to_add = ['activate', 'deactivate', 'change_amount'];
 
         return array_merge(
             config('filament-shield.permission_prefixes.resource'),

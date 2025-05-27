@@ -40,4 +40,16 @@ class CoinPolicy
     {
         return $user->can('deactivate_' . $this->model);
     }
+
+    /**
+     * Determine whether the user can change the amount of the model of the given type.
+     *
+     * @param \App\Domain\Admin\Models\Admin | \App\Domain\User\Models\User $user
+     *
+     * @return bool
+     */
+    public function changeAmount(Admin|User $user): bool
+    {
+        return $user->can('change_amount_' . $this->model);
+    }
 }
