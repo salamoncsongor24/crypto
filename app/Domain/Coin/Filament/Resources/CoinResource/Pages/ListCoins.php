@@ -2,7 +2,9 @@
 
 namespace App\Domain\Coin\Filament\Resources\CoinResource\Pages;
 
+use App\Domain\Coin\Actions\CreateCoinAction;
 use App\Domain\Coin\Contracts\CoinApiContract;
+use App\Domain\Coin\DataObjects\DataTransferObjects\CoinCreationData;
 use App\Domain\Coin\DataObjects\Enums\CoinStatus;
 use App\Domain\Coin\Filament\Resources\CoinResource;
 use Filament\Actions\Action;
@@ -10,10 +12,10 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Tables\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\ActionGroup;
@@ -112,8 +114,9 @@ class ListCoins extends ListRecords
                 ->icon('heroicon-o-cloud-arrow-down')
                 ->color('primary')
                 ->requiresConfirmation()
+                ->authorize(fn () => Auth::user()->can('create', CoinResource::getModel()))
                 ->form([
-                    Select::make('select_coin')
+                    Select::make('remote_id')
                         ->label(__('Select Coin'))
                         ->searchable()
                         ->live()
@@ -129,28 +132,49 @@ class ListCoins extends ListRecords
                                 : collect([]);
                         })
                         ->afterStateUpdated(function ($state, Set $set, CoinApiContract $coinApiService) {
-                                $set('description', $coinApiService->fetchCoinDescription($state));
+                            $coin = $coinApiService->fetchCoinDetails($state);
+
+                            $set('description', $coin->description);
+                            $set('name', $coin->name);
+                            $set('symbol', $coin->symbol);
                         })
+                        ->required(),
+
+                    Hidden::make('name')
+                        ->required(),
+
+                    Hidden::make('symbol')
                         ->required(),
 
                     Textarea::make('description')
                         ->label(__('Description'))
-                        ->visible(fn (Get $get) => $get('select_coin') !== null)
-                        ->maxLength(5000)
+                        ->visible(fn (Get $get) => $get('remote_id') !== null)
+                        ->maxLength(65535)
                         ->placeholder(__('No description from the API. Feel free to add your own description here.')),
 
                     Toggle::make('is_active')
                         ->label(__('Active'))
                         ->default(true)
-                        ->visible(fn (Get $get) => $get('select_coin') !== null),
+                        ->visible(fn (Get $get) => $get('remote_id') !== null),
 
                     Checkbox::make('notify_users')
                         ->label(__('Notify Users?'))
                         ->default(false)
-                        ->visible(fn (Get $get) => $get('select_coin') !== null),
+                        ->visible(fn (Get $get) => $get('remote_id') !== null),
                 ])
                 ->action(function (array $data) {
-                    dd($data);
+                    (new CreateCoinAction())(CoinCreationData::from([
+                        'remote_id' => $data['remote_id'],
+                        'name' => $data['name'],
+                        'symbol' => $data['symbol'],
+                        'description' => $data['description'],
+                        'status' => $data['is_active'] ? CoinStatus::active() : CoinStatus::inactive(),
+                    ]));
+
+                    Notification::make()
+                        ->title(__('Coin Imported Successfully'))
+                        ->success()
+                        ->send();
                 }),
         ];
     }

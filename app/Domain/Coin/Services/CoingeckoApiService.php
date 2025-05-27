@@ -3,6 +3,7 @@
 namespace App\Domain\Coin\Services;
 
 use App\Domain\Coin\Contracts\CoinApiContract;
+use App\Domain\Coin\DataObjects\DataTransferObjects\DetailedApiResponseData;
 use App\Domain\Coin\DataObjects\DataTransferObjects\SearchApiResponseData;
 use App\Domain\Coin\Exceptions\CoinGeckoApiResponseErrorException;
 use Illuminate\Support\Collection;
@@ -51,13 +52,13 @@ class CoingeckoApiService implements CoinApiContract
     }
 
     /**
-     * Fetch the description of a coin.
+     * Fetch the details of a coin.
      *
-     * @param string $remote_id the id of the coin to fetch the description for
+     * @param string $remote_id the id of the coin to fetch the details for
      *
-     * @return string the description of the coin
+     * @return DetailedApiResponseData the details of the coin
      */
-    public function fetchCoinDescription(string $remote_id): string
+    public function fetchCoinDetails(string $remote_id): DetailedApiResponseData
     {
         $response = Http::get(self::API_BASE_URL . '/coins/' . $remote_id);
 
@@ -69,7 +70,12 @@ class CoingeckoApiService implements CoinApiContract
 
         $coinData = $response->json();
 
-        return $coinData['description']['en'] ?? '';
+        return DetailedApiResponseData::from([
+            'remote_id' => $coinData['id'] ?? '',
+            'name' => $coinData['name'] ?? '',
+            'symbol' => $coinData['symbol'] ?? '',
+            'description' => $coinData['description']['en'] ?? '',
+        ]);
     }
 
     /**

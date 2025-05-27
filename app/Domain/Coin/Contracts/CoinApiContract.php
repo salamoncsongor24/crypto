@@ -2,6 +2,7 @@
 
 namespace App\Domain\Coin\Contracts;
 
+use App\Domain\Coin\DataObjects\DataTransferObjects\DetailedApiResponseData;
 use Illuminate\Support\Collection;
 
 interface CoinApiContract
@@ -16,13 +17,13 @@ interface CoinApiContract
     public function searchCoins(string $query): Collection;
 
     /**
-     * Fetch the description of a coin.
+     * Fetch the details of a coin.
      *
-     * @param string $remote_id the id of the coin to fetch the description for
+     * @param string $remote_id the id of the coin to fetch the details for
      *
-     * @return string the description of the coin
+     * @return DetailedApiResponseData the details of the coin
      */
-    public function fetchCoinDescription(string $remote_id): string;
+    public function fetchCoinDetails(string $remote_id): DetailedApiResponseData;
 
     /**
      * Get the current price of a coin.
