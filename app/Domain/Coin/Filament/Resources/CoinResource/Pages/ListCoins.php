@@ -169,7 +169,7 @@ class ListCoins extends ListRecords
                         'symbol' => $data['symbol'],
                         'description' => $data['description'],
                         'status' => $data['is_active'] ? CoinStatus::active() : CoinStatus::inactive(),
-                    ]));
+                    ]), $data['notify_users']);
 
                     Notification::make()
                         ->title(__('Coin Imported Successfully'))
