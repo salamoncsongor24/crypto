@@ -26,11 +26,11 @@ interface CoinApiContract
     public function fetchCoinDetails(string $remote_id): DetailedApiResponseData;
 
     /**
-     * Get the current price of a coin.
+     * Get the current price of coins.
      *
-     * @param string $remote_id the id of the coin to get the price for
+     * @param Collection $remote_ids A collection of remote IDs of the coins to fetch prices for
      *
-     * @return float
+     * @return Collection the current price of the coin in various currencies
      */
-    public function getCurrentPrice(string $remote_id): float;
+    public function getCurrentPrices(Collection $remote_ids): Collection;
 }
