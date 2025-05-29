@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('coin_prices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('coin_id')
-                ->constrained('coins')
+            $table->string('coin_id')
+                ->constrained('coins', 'remote_id')
+                ->references('remote_id')
                 ->cascadeOnDelete();
             $table->string('currency', 3)
                 ->default(config('app.default_currency'));

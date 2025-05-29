@@ -3,6 +3,7 @@
 namespace App\Domain\Coin\DataObjects\DataTransferObjects;
 
 use Spatie\LaravelData\Attributes\Validation\Exists;
+use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Data;
 
 class PriceApiResponseData extends Data
@@ -18,6 +19,9 @@ class PriceApiResponseData extends Data
         public string $remote_id,
 
         public float $price,
+
+        #[Max(3)]
+        public string $currency,
     ) {
     }
 }
