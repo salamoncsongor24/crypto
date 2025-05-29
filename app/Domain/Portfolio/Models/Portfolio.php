@@ -3,6 +3,7 @@
 namespace App\Domain\Portfolio\Models;
 
 use App\Domain\Coin\Models\Coin;
+use App\Domain\Portfolio\Helpers\HasCoinPrices;
 use App\Domain\User\Models\User;
 use Database\Factories\PortfolioFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Portfolio extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasCoinPrices;
 
     /**
      * The attributes that are mass assignable.
