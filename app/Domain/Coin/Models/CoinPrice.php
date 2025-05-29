@@ -30,7 +30,7 @@ class CoinPrice extends Model
      */
     public function coin(): BelongsTo
     {
-        return $this->belongsTo(Coin::class, 'coin_id', 'id');
+        return $this->belongsTo(Coin::class, 'coin_id', 'remote_id');
     }
 
     /**
