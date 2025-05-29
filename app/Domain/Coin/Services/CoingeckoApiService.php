@@ -4,6 +4,7 @@ namespace App\Domain\Coin\Services;
 
 use App\Domain\Coin\Contracts\CoinApiContract;
 use App\Domain\Coin\DataObjects\DataTransferObjects\DetailedApiResponseData;
+use App\Domain\Coin\DataObjects\DataTransferObjects\PriceApiResponseData;
 use App\Domain\Coin\DataObjects\DataTransferObjects\SearchApiResponseData;
 use App\Domain\Coin\Exceptions\CoinGeckoApiResponseErrorException;
 use Illuminate\Support\Collection;
@@ -11,8 +12,6 @@ use Illuminate\Support\Facades\Http;
 
 class CoingeckoApiService implements CoinApiContract
 {
-    const API_BASE_URL = 'https://api.coingecko.com/api/v3';
-
     /**
      * Search for coins based on a query string.
      *
@@ -22,7 +21,7 @@ class CoingeckoApiService implements CoinApiContract
      */
     public function searchCoins(string $query): Collection
     {
-        $response = Http::get(self::API_BASE_URL . '/search', [
+        $response = Http::get(config('coingecko.api_base_url') . '/search', [
             'query' => $query,
         ]);
 
@@ -60,7 +59,7 @@ class CoingeckoApiService implements CoinApiContract
      */
     public function fetchCoinDetails(string $remote_id): DetailedApiResponseData
     {
-        $response = Http::get(self::API_BASE_URL . '/coins/' . $remote_id);
+        $response = Http::get(config('coingecko.api_base_url') . '/coins/' . $remote_id);
 
         if (!$response->successful()) {
             throw new CoinGeckoApiResponseErrorException(
@@ -79,15 +78,33 @@ class CoingeckoApiService implements CoinApiContract
     }
 
     /**
-     * Get the current price of a coin.
+     * Get the current price of coins.
      *
-     * @param string $remote_id The id of the coin to get the price for
+     * @param Collection $remote_ids A collection of remote IDs of the coins to fetch prices for
      *
-     * @return float
+     * @return Collection the current price of the coin in various currencies
      */
-    public function getCurrentPrice(string $remote_id): float
+    public function getCurrentPrices(Collection $remote_ids): Collection
     {
-        // Implementation for fetching the current price of a coin from Coingecko API
-        return 0.0;
+        $response = Http::get(config('coingecko.api_base_url') . '/simple/price', [
+            'ids' => $remote_ids->implode(','),
+            'vs_currencies' => config('coingecko.default_currency'),
+            'precision' => config('coingecko.precision'),
+        ]);
+
+        if (!$response->successful()) {
+            throw new CoinGeckoApiResponseErrorException(
+                'Failed to fetch current prices from Coingecko API: ' . $response->body()
+            );
+        }
+
+        $pricesRaw = $response->json();
+
+        return collect($pricesRaw)->map(function ($priceData, $remoteId) {
+            return PriceApiResponseData::from([
+                'remote_id' => $remoteId,
+                'price' => $priceData[config('coingecko.default_currency')],
+            ]);
+        });
     }
 }

@@ -42,6 +42,7 @@ class ListPortfolios extends ListRecords
                 TextColumn::make('description')
                     ->label(__('Description'))
                     ->limit(50)
+                    ->placeholder(__('No description'))
                     ->searchable(),
                 IconColumn::make('is_public')
                     ->label(__('Public'))
