@@ -62,7 +62,7 @@ class Coin extends Model
      */
     public function prices(): HasMany
     {
-        return $this->hasMany(CoinPrice::class, 'coin_id', 'id');
+        return $this->hasMany(CoinPrice::class, 'coin_id', 'remote_id');
     }
 
     /**

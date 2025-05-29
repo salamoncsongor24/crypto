@@ -9,6 +9,7 @@ use App\Domain\Coin\DataObjects\DataTransferObjects\SearchApiResponseData;
 use App\Domain\Coin\Exceptions\CoinGeckoApiResponseErrorException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class CoingeckoApiService implements CoinApiContract
 {
@@ -35,7 +36,7 @@ class CoingeckoApiService implements CoinApiContract
 
         // this logic is needed to filter out invalid coins
         // that do not conform to the SearchApiResponseData structure
-        $validCoins = collect($coinsRaw)->map(function ($coinData) {
+        return collect($coinsRaw)->map(function ($coinData) {
             try {
                 return SearchApiResponseData::from([
                     'remote_id' => $coinData['id'] ?? '',
@@ -45,9 +46,7 @@ class CoingeckoApiService implements CoinApiContract
             } catch (\Throwable $e) {
                 return null;
             }
-        })->filter();
-
-        return $validCoins->values();
+        })->filter()->values();
     }
 
     /**
@@ -86,9 +85,11 @@ class CoingeckoApiService implements CoinApiContract
      */
     public function getCurrentPrices(Collection $remote_ids): Collection
     {
+        $currency = config('coingecko.default_currency');
+
         $response = Http::get(config('coingecko.api_base_url') . '/simple/price', [
             'ids' => $remote_ids->implode(','),
-            'vs_currencies' => config('coingecko.default_currency'),
+            'vs_currencies' => $currency,
             'precision' => config('coingecko.precision'),
         ]);
 
@@ -100,11 +101,17 @@ class CoingeckoApiService implements CoinApiContract
 
         $pricesRaw = $response->json();
 
-        return collect($pricesRaw)->map(function ($priceData, $remoteId) {
-            return PriceApiResponseData::from([
-                'remote_id' => $remoteId,
-                'price' => $priceData[config('coingecko.default_currency')],
-            ]);
-        });
+        return collect($pricesRaw)->map(function ($priceData, $remoteId) use ($currency) {
+            try {
+                return PriceApiResponseData::from([
+                    'remote_id' => $remoteId,
+                    'price' => $priceData[$currency],
+                    'currency' => $currency,
+                ]);
+            } catch (\Throwable $e) {
+                Log::error($remoteId . ' price data is not valid');
+                return null;
+            }
+        })->filter()->values();
     }
 }
