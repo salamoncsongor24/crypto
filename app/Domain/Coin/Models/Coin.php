@@ -3,6 +3,7 @@
 namespace App\Domain\Coin\Models;
 
 use App\Domain\Coin\DataObjects\Enums\CoinStatus;
+use App\Domain\Coin\Helpers\HasPrices;
 use App\Domain\Coin\Scopes\ActiveScope;
 use App\Domain\Portfolio\Models\Portfolio;
 use Database\Factories\CoinFactory;
@@ -16,8 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[ScopedBy([ActiveScope::class])]
 class Coin extends Model
 {
-    /** @use HasFactory<\Database\Factories\CoinFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasPrices;
 
     /**
      * The attributes that are mass assignable.
