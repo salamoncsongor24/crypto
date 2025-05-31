@@ -3,6 +3,7 @@
 namespace App\Domain\Portfolio\Filament\Resources\PortfolioResource\Pages;
 
 use App\Domain\Portfolio\Filament\Resources\PortfolioResource;
+use App\Domain\Portfolio\Models\Portfolio;
 use Filament\Actions;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
@@ -33,8 +34,10 @@ class ListPortfolios extends ListRecords
      */
     public function table(Table $table): Table
     {
+        $currency = config('currency.default_currency');
+
         return $table
-            ->poll('30s')
+            ->poll('5s')
             ->columns([
                 TextColumn::make('name')
                     ->label(__('Portfolio Name'))
@@ -47,8 +50,10 @@ class ListPortfolios extends ListRecords
                     ->searchable(),
                 TextColumn::make('value')
                     ->label(__('Total Value'))
-                    ->getStateUsing(fn ($record) => $record->getTotalValue(config('currency.default_currency')))
-                    ->money(config('currency.default_currency'), true),
+                    ->getStateUsing(fn (Portfolio $record) => $record->getTotalValue($currency))
+                    ->description(
+                        fn (Portfolio $record)=> __('Last updated: ') . $record->getCoinPriceLastUpdated($currency)->diffForHumans())
+                    ->money($currency, true),
                 IconColumn::make('is_public')
                     ->label(__('Public'))
                     ->boolean()

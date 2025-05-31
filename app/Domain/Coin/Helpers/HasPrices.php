@@ -19,4 +19,20 @@ trait HasPrices
             ->first()
             ?->price;
     }
+
+    /**
+     * Get the last updated timestamp for the current price of the coin in the specified currency.
+     *
+     * @param string $currency The currency to check the last updated time for.
+     *
+     * @return \DateTime|null The last updated timestamp, or null if no prices are present.
+     */
+    public function getCurrentPriceLastUpdated(string $currency): ?\DateTime
+    {
+        return $this->prices()
+            ->where('currency', $currency)
+            ->orderByDesc('created_at')
+            ->first()
+            ?->created_at;
+    }
 }
