@@ -31,6 +31,7 @@ class CoinsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->poll('30s')
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
@@ -45,6 +46,14 @@ class CoinsRelationManager extends RelationManager
                     ->label('Amount')
                     ->sortable()
                     ->numeric(),
+                Tables\Columns\TextColumn::make('held_value')
+                    ->label('Held Value')
+                    ->getStateUsing(fn (Coin $record) => $record->pivot->amount * $record->getCurrentPrice(config('currency.default_currency')))
+                    ->money(config('currency.default_currency'), true),
+                Tables\Columns\TextColumn::make('coin_value')
+                    ->label('Coin Value')
+                    ->getStateUsing(fn (Coin $record) => $record->getCurrentPrice(config('currency.default_currency')))
+                    ->money(config('currency.default_currency'), true),
             ])
             ->headerActions([
                 AttachAction::make()
