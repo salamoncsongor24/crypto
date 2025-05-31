@@ -16,4 +16,16 @@ trait HasCoinPrices
             return $coin->getCurrentPrice($currency) * $coin->pivot->amount;
         });
     }
+
+    /**
+     * Get the last updated timestamp for the current price of the first coin in the portfolio.
+     *
+     * @param string $currency The currency to check the last updated time for.
+     *
+     * @return \DateTime|null The last updated timestamp, or null if no coins are present.
+     */
+    public function getCoinPriceLastUpdated(string $currency): ?\DateTime
+    {
+        return $this->coins->first()?->getCurrentPriceLastUpdated($currency);
+    }
 }

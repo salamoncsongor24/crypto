@@ -30,8 +30,10 @@ class CoinsRelationManager extends RelationManager
      */
     public function table(Table $table): Table
     {
+        $currency = config('currency.default_currency');
+
         return $table
-            ->poll('30s')
+            ->poll('5s')
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
@@ -48,12 +50,18 @@ class CoinsRelationManager extends RelationManager
                     ->numeric(),
                 Tables\Columns\TextColumn::make('held_value')
                     ->label('Held Value')
-                    ->getStateUsing(fn (Coin $record) => $record->pivot->amount * $record->getCurrentPrice(config('currency.default_currency')))
-                    ->money(config('currency.default_currency'), true),
+                    ->getStateUsing(fn (Coin $record) => $record->pivot->amount * $record->getCurrentPrice($currency))
+                    ->description(
+                        fn (Coin $record) => __('Last updated: ') . $record->getCurrentPriceLastUpdated($currency)->diffForHumans()
+                    )
+                    ->money($currency, true),
                 Tables\Columns\TextColumn::make('coin_value')
                     ->label('Coin Value')
-                    ->getStateUsing(fn (Coin $record) => $record->getCurrentPrice(config('currency.default_currency')))
-                    ->money(config('currency.default_currency'), true),
+                    ->getStateUsing(fn (Coin $record) => $record->getCurrentPrice($currency))
+                    ->description(
+                        fn (Coin $record) => __('Last updated: ') . $record->getCurrentPriceLastUpdated($currency)->diffForHumans()
+                    )
+                    ->money($currency, true),
             ])
             ->headerActions([
                 AttachAction::make()
