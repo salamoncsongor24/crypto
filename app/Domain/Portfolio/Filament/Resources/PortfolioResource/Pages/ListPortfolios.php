@@ -34,6 +34,7 @@ class ListPortfolios extends ListRecords
     public function table(Table $table): Table
     {
         return $table
+            ->poll('30s')
             ->columns([
                 TextColumn::make('name')
                     ->label(__('Portfolio Name'))
@@ -44,6 +45,10 @@ class ListPortfolios extends ListRecords
                     ->limit(50)
                     ->placeholder(__('No description'))
                     ->searchable(),
+                TextColumn::make('value')
+                    ->label(__('Total Value'))
+                    ->getStateUsing(fn ($record) => $record->getTotalValue(config('currency.default_currency')))
+                    ->money(config('currency.default_currency'), true),
                 IconColumn::make('is_public')
                     ->label(__('Public'))
                     ->boolean()
