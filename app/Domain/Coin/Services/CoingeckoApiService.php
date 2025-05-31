@@ -85,7 +85,7 @@ class CoingeckoApiService implements CoinApiContract
      */
     public function getCurrentPrices(Collection $remote_ids): Collection
     {
-        $currency = config('coingecko.default_currency');
+        $currency = config('currency.default_currency');
 
         $response = Http::get(config('coingecko.api_base_url') . '/simple/price', [
             'ids' => $remote_ids->implode(','),
