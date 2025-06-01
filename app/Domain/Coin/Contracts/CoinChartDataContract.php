@@ -18,5 +18,5 @@ interface CoinChartDataContract
      *
      * @return Collection A collection of price chart data for the specified coin.
      */
-    public function getCoinPriceChartDataBetweenDates(string $id, Carbon $startDate, Carbon $endDate, int $intervalInMinutes = 1, string $currency = "usd", ): Collection;
+    public function getCoinPriceChartDataBetweenDates(string $id, Carbon $startDate, Carbon $endDate, int $intervalInMinutes = 1, string $currency = "usd"): Collection;
 }

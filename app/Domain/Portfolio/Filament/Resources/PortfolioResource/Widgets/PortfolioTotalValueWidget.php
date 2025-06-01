@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Domain\Coin\Filament\Resources\CoinResource\Widgets;
+namespace App\Domain\Portfolio\Filament\Resources\PortfolioResource\Widgets;
 
-use App\Domain\Coin\Contracts\CoinChartDataContract;
+use App\Domain\Portfolio\Contracts\PortfolioChartDataContract;
 use Carbon\Carbon;
 use Filament\Support\RawJs;
 use LaraZeus\InlineChart\InlineChartWidget;
 
-class CoinPriceWidget extends InlineChartWidget
+class PortfolioTotalValueWidget extends InlineChartWidget
 {
     /**
      * The column span for the widget.
@@ -47,11 +47,11 @@ class CoinPriceWidget extends InlineChartWidget
      */
     protected function getData(): array
     {
-        $coinChartDataService = app(CoinChartDataContract::class);
+        $portfolioChartDataService = app(PortfolioChartDataContract::class);
 
         // set up to show the portfolio value chart for the last 24 hours in 1 hour intervals
-        $chartData = $coinChartDataService->getCoinPriceChartDataBetweenDates(
-            id: $this->record->remote_id,
+        $chartData = $portfolioChartDataService->getPortfolioValueChartDataBetweenDates(
+            id: $this->record->id,
             startDate: Carbon::now()->subDays(1),
             endDate: Carbon::now(),
             intervalInMinutes: 60,

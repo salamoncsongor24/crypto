@@ -3,6 +3,7 @@
 namespace App\Domain\Portfolio\Filament\Resources\PortfolioResource\Pages;
 
 use App\Domain\Portfolio\Filament\Resources\PortfolioResource;
+use App\Domain\Portfolio\Filament\Resources\PortfolioResource\Widgets\PortfolioTotalValueWidget;
 use App\Domain\Portfolio\Models\Portfolio;
 use Filament\Actions;
 use Filament\Tables\Actions\ActionGroup;
@@ -15,6 +16,7 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use LaraZeus\InlineChart\Tables\Columns\InlineChart;
 
 class ListPortfolios extends ListRecords
 {
@@ -48,8 +50,13 @@ class ListPortfolios extends ListRecords
                     ->limit(50)
                     ->placeholder(__('No description'))
                     ->searchable(),
+                InlineChart::make('value_chart')
+                    ->label('Portfolio Value Chart (Last 24 hours)')
+                    ->chart(PortfolioTotalValueWidget::class)
+                    ->maxWidth(350)
+                    ->maxHeight(100),
                 TextColumn::make('value')
-                    ->label(__('Total Value'))
+                    ->label(__('Current Portfolio Value'))
                     ->getStateUsing(fn (Portfolio $record) => $record->getTotalValue($currency))
                     ->description(
                         fn (Portfolio $record)=> __('Last updated: ') . $record->getCoinPriceLastUpdated($currency)->diffForHumans())
@@ -57,14 +64,6 @@ class ListPortfolios extends ListRecords
                 IconColumn::make('is_public')
                     ->label(__('Public'))
                     ->boolean()
-                    ->sortable(),
-                TextColumn::make('created_at')
-                    ->label(__('Created At'))
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('updated_at')
-                    ->label(__('Updated At'))
-                    ->dateTime()
                     ->sortable(),
             ])
             ->actions([
