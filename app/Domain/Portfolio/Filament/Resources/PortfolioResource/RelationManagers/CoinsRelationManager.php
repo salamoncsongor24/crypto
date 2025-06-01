@@ -2,6 +2,7 @@
 
 namespace App\Domain\Portfolio\Filament\Resources\PortfolioResource\RelationManagers;
 
+use App\Domain\Coin\Filament\Resources\CoinResource\Widgets\CoinPriceWidget;
 use App\Domain\Coin\Models\Coin;
 use Auth;
 use Filament\Forms\Components\TextInput;
@@ -13,6 +14,7 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\AttachAction;
 use Filament\Tables\Actions\DetachAction;
 use Filament\Tables\Table;
+use LaraZeus\InlineChart\Tables\Columns\InlineChart;
 
 class CoinsRelationManager extends RelationManager
 {
@@ -53,10 +55,15 @@ class CoinsRelationManager extends RelationManager
                     ->getStateUsing(fn (Coin $record) => $record->pivot->amount * $record->getCurrentPrice($currency))
                     ->description(
                         fn (Coin $record) => __('Last updated: ') . $record->getCurrentPriceLastUpdated($currency)->diffForHumans()
-                    )
+                        )
                     ->money($currency, true),
+                InlineChart::make('price_chart')
+                    ->label('Coin Value Chart (Last 24 hours)')
+                    ->chart(CoinPriceWidget::class)
+                    ->maxWidth(350)
+                    ->maxHeight(100),
                 Tables\Columns\TextColumn::make('coin_value')
-                    ->label('Coin Value')
+                    ->label('Coin Current Value')
                     ->getStateUsing(fn (Coin $record) => $record->getCurrentPrice($currency))
                     ->description(
                         fn (Coin $record) => __('Last updated: ') . $record->getCurrentPriceLastUpdated($currency)->diffForHumans()
