@@ -15,6 +15,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Domain\Coin\Contracts\CoinApiContract::class,
             \App\Domain\Coin\Services\CoingeckoApiService::class
         );
+        $this->app->bind(
+            \App\Domain\Coin\Contracts\CoinChartDataContract::class,
+            \App\Domain\Coin\Services\CoinChartDataService::class
+        );
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Domain\Coin\Filament\Resources\CoinResource\Widgets\CoinPriceWidget;
 use App\Domain\Portfolio\Filament\Resources\PortfolioResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -45,7 +46,7 @@ class CryptoPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->widgets([
-                //
+                CoinPriceWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

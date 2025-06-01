@@ -23,6 +23,10 @@ class CoinPrice extends Model
         'price',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
     /**
      * The coin that this price belongs to.
      *
