@@ -46,6 +46,10 @@ class ListUsers extends ListRecords
                     ->label(__('Roles'))
                     ->placeholder(__('No roles assigned'))
                     ->state(fn (User $record) => $record->roles->pluck('name')->join(', ')),
+                IconColumn::make('get_notifications')
+                    ->label(__('Subscribed to Notifications'))
+                    ->boolean()
+                    ->sortable(),
                 IconColumn::make('email_verified_at')
                     ->label(__('Email Verified'))
                     ->boolean()

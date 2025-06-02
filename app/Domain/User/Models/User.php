@@ -27,6 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'email_verified_at',
+        'get_notifications'
     ];
 
     /**
@@ -70,5 +71,18 @@ class User extends Authenticatable implements MustVerifyEmail
     protected static function newFactory(): UserFactory
     {
         return UserFactory::new();
+    }
+
+    /**
+     * Perform any actions required after the model boots.
+     *
+     * @return void
+     */
+    protected static function booted(): void
+    {
+        // User gets default role on registration
+        static::creating(function (User $user) {
+            $user->assignRole('Crypto Holder');
+        });
     }
 }
