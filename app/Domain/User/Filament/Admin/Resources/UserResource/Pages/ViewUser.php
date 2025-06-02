@@ -5,6 +5,7 @@ namespace App\Domain\User\Filament\Admin\Resources\UserResource\Pages;
 use App\Domain\User\Filament\Admin\Resources\UserResource;
 use App\Domain\User\Models\User;
 use Filament\Actions;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -42,6 +43,9 @@ class ViewUser extends ViewRecord
                             ->label(__('Email Verified At'))
                             ->placeholder(__('Not Verified'))
                             ->dateTime(),
+                        IconEntry::make('get_notifications')
+                            ->label(__('Subscribed to Notifications'))
+                            ->boolean(),
                     ])
                     ->columns(['md' => 2])
                     ->columnSpan(['md' => 2]),

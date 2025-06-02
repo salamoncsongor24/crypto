@@ -3,6 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Domain\Coin\Filament\Resources\CoinResource\Widgets\CoinPriceWidget;
+use App\Domain\Common\Filament\Pages\Auth\Profile;
+use App\Domain\Common\Filament\Pages\Auth\Register;
 use App\Domain\Portfolio\Filament\Resources\PortfolioResource;
 use App\Domain\Portfolio\Filament\Resources\PortfolioResource\Widgets\PortfolioTotalValueWidget;
 use Filament\Http\Middleware\Authenticate;
@@ -32,10 +34,10 @@ class CryptoPanelProvider extends PanelProvider
             ->brandLogoHeight('5rem')
             ->favicon(asset('favicon.ico'))
             ->login()
-            ->registration()
+            ->registration(Register::class)
             ->passwordReset()
             ->emailVerification()
-            ->profile()
+            ->profile(Profile::class)
             ->databaseNotifications()
             ->colors([
                 'primary' => Color::Purple,

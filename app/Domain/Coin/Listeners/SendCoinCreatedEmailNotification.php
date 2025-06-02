@@ -25,8 +25,7 @@ class SendCoinCreatedEmailNotification
             return;
         }
 
-        // TODO: only subscribed users should receive the notification
-        $users = User::all();
+        $users = User::where('get_notifications', true)->get();
 
         Mail::to($users)->queue(new CoinCreated($event->coin));
     }
