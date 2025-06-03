@@ -2,8 +2,8 @@
 
 namespace App\Domain\Coin\Jobs;
 
+use App\Domain\Coin\Events\CoinPriceChangedSignificantly;
 use App\Domain\Coin\Models\Coin;
-use App\Events\CoinPriceChangedSignificantly;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;

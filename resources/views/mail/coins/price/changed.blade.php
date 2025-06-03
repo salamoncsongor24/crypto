@@ -7,7 +7,7 @@ The following coins have experienced a price change of over **{{ $sensitivity * 
 {{ $index + 1 }}. **{{ $coin->name }}** ({{ $coin->symbol }}) — ID: {{ $coin->remote_id }}
 @endforeach
 
-<x-mail::button :url="{{ $url }}">
+<x-mail::button :url="$url">
 Check your portfolios
 </x-mail::button>
 
