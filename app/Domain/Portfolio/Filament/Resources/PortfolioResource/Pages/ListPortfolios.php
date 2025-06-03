@@ -59,7 +59,7 @@ class ListPortfolios extends ListRecords
                     ->label(__('Current Portfolio Value'))
                     ->getStateUsing(fn (Portfolio $record) => $record->getTotalValue($currency))
                     ->description(
-                        fn (Portfolio $record)=> __('Last updated: ') . $record->getCoinPriceLastUpdated($currency)->diffForHumans())
+                        fn (Portfolio $record)=> __('Last updated: ') . $record->getCoinPriceLastUpdated($currency)?->diffForHumans())
                     ->money($currency, true),
                 IconColumn::make('is_public')
                     ->label(__('Public'))
