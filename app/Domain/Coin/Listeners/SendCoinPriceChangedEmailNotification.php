@@ -2,9 +2,9 @@
 
 namespace App\Domain\Coin\Listeners;
 
+use App\Domain\Coin\Events\CoinPriceChangedSignificantly;
 use App\Domain\Coin\Mail\CoinsPriceChanged;
 use App\Domain\User\Models\User;
-use App\Events\CoinPriceChangedSignificantly;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
