@@ -54,7 +54,7 @@ class CoinsRelationManager extends RelationManager
                     ->label('Held Value')
                     ->getStateUsing(fn (Coin $record) => $record->pivot->amount * $record->getCurrentPrice($currency))
                     ->description(
-                        fn (Coin $record) => __('Last updated: ') . $record->getCurrentPriceLastUpdated($currency)->diffForHumans()
+                        fn (Coin $record) => __('Last updated: ') . $record->getCurrentPriceLastUpdated($currency)?->diffForHumans()
                         )
                     ->money($currency, true),
                 InlineChart::make('price_chart')
@@ -65,8 +65,9 @@ class CoinsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('coin_value')
                     ->label('Coin Current Value')
                     ->getStateUsing(fn (Coin $record) => $record->getCurrentPrice($currency))
+                    ->placeholder(__('No data'))
                     ->description(
-                        fn (Coin $record) => __('Last updated: ') . $record->getCurrentPriceLastUpdated($currency)->diffForHumans()
+                        fn (Coin $record) => __('Last updated: ') . $record->getCurrentPriceLastUpdated($currency)?->diffForHumans()
                     )
                     ->money($currency, true),
             ])
