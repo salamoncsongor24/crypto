@@ -114,3 +114,5 @@ The project is divided into so called `domains`. These are basically logical gro
 The chosen API is Coingecko, as it suits the app's needs perfectly. The free tier doesn't require authentication and it provides useful endpoints, so queries can be optimized. In the admin panel admins can search for coins and add them to the application. They can edit the description or select wether they want the users to be notified or not. Users can unsubscribe from notifications any time, or choose on register. Users can add any available coin to any of their portfolios. The graphs are only configured to show last 24 hours data.
 
 I used softdelete in most cases so data is never truly lost.
+
+The landing page is a placeholder created by small modifications to the standard Laravel welcome page.
